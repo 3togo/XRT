@@ -86,8 +86,8 @@ nobuild=0
 noctest=0
 static_boost=""
 ertfw=""
+#cmake_flags="-DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DBOOST_BIND_GLOBAL_PLACEHOLDERS"
 cmake_flags="-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
-
 while [ $# -gt 0 ]; do
     case "$1" in
         -help)
