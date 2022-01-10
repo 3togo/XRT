@@ -1,4 +1,4 @@
-files=("$(find ../ -maxdepth 2 -type d -name ERT-BSP)")
+files=("$(find . -maxdepth 2 -type d -name ERT-BSP)")
 [ ${#files[@]} -eq "0" ] && echo "cannot find directory ERT-BSP" && exit 1
 mdir="$(realpath ${files[0]})"
 cmd="ln -sf \"$mdir\" src/runtime_src/ert/scheduler"
