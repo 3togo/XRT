@@ -6,14 +6,20 @@
 if (${ERT_BUILD_ALL} STREQUAL "yes")
 
 function(GetBSP BSP)
- set(URL https://github.com/Xilinx/ERT-BSP/raw/main/BSPs/${BSP})
- FILE(DOWNLOAD ${URL} ${CMAKE_CURRENT_BINARY_DIR}/${BSP} STATUS dlstatus)
- if(NOT dlstatus EQUAL 0)
-  message(FATAL_ERROR "ERROR: Failed to retrieve files from: ${URL}\n"
-                       "   error code: ${dlstatus}\n")
- endif()
+ set(tmpFile ${CMAKE_CURRENT_SOURCE_DIR}/ERT-BSP/BSPs/${BSP})
+ message("tmpFile = ${tmpFile}")
+ if(EXISTS ${tmpFile})
+    FILE(COPY ${tmpFile} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+ else()
+     set(URL https://github.com/Xilinx/ERT-BSP/raw/main/BSPs/${BSP})
+     FILE(DOWNLOAD ${URL} ${CMAKE_CURRENT_BINARY_DIR}/${BSP} STATUS dlstatus)
+     if(NOT dlstatus EQUAL 0)
+      message(FATAL_ERROR "ERROR: Failed to retrieve files from: ${URL}\n"
+                           "   error code: ${dlstatus}\n")
+     endif()
+endif()
 endfunction()
-
+message("CMAKE_CURRENT_BINARY_DIR = ${CMAKE_CURRENT_BINARY_DIR}")
 GetBSP("sched_bsp.tar.bz2")
 GetBSP("sched_bsp_u50.tar.bz2")
 GetBSP("sched_bsp_v20.tar.bz2")
@@ -92,7 +98,7 @@ set(CURR_SOURCE "")
 add_library(sched_em SHARED ${CURR_SOURCE}
   $<TARGET_OBJECTS:sch_objects>
   )
-target_compile_definitions(sch_objects PUBLIC -DERT_HW_EMU -DXCLHAL_MAJOR_VER=1 -DXCLHAL_MINOR_VER=0)  
+target_compile_definitions(sch_objects PUBLIC -DERT_HW_EMU -DXCLHAL_MAJOR_VER=1 -DXCLHAL_MINOR_VER=0)
 
 set_target_properties(sched_em PROPERTIES VERSION ${XRT_VERSION_STRING}
   SOVERSION ${XRT_SOVERSION})
